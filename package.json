@@ -6,7 +6,7 @@
     "@types/bun": "latest"
   },
   "scripts": {
-    "start": "bun server.js --env-file=.env",
+    "start": "bun server.js",
     "dev": "bun --watch server.js"
   },
   "peerDependencies": {

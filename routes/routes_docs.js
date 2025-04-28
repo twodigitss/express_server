@@ -1,4 +1,4 @@
-import Post from '../schemas/posts.js';
+import Post from '../schemas/schema_posts.js';
 import { Router } from 'express';
 const router = Router();
 

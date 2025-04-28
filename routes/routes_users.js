@@ -2,7 +2,7 @@ import { Router } from 'express';
 const router = Router();
 
 //schemas
-import User, { Score } from '../schemas/users.js';
+import User, { Score } from '../schemas/schema_users.js';
 
 
 router.get('/user/all', async(_req, res) => {

@@ -6,8 +6,10 @@ import MongooseSession from './connections/mongoose.js';
 import router_docs from './routes/routes_docs.js';
 import router_users from './routes/routes_users.js';
 
+const database = "PruebaReact"
 const port = 3000;
 const app = express();
+
 app.use(express.json());
 app.use(cors());
 
@@ -15,7 +17,7 @@ app.listen(port, () => {
    console.log(`🍀 Listening at: [ http://localhost:${port} ]`);
 });
 
-await MongooseSession().catch(console.dir);
+await MongooseSession(database).catch(console.dir);
 
 app.use('/', router_users);
 app.use('/', router_docs);

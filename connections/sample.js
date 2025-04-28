@@ -1,5 +1,4 @@
 import { MongoClient, ServerApiVersion } from 'mongodb';
-process.loadEnvFile()
 const { MONGO_URL: uri } = process.env;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -11,12 +10,12 @@ const client = new MongoClient(uri, {
   }
 });
 
-async function run() {
+async function run(DataBase) {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
-    await client.db("PruebaReact").command({ ping: 1 });
+    await client.db(DataBase).command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
@@ -27,5 +26,6 @@ async function run() {
 
 export default client;
 export { run }
-// run().catch(console.dir);
+// to test, uncomment line below .
+// run("PruebaReact").catch(console.dir);
 
