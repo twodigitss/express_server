@@ -141,7 +141,11 @@ router.delete('/user/delete', async (req, res)=>{
 router.patch('/user/modify', async (req, res) => {
   try {
     const { query, data } = req.body;
-    const { score, role } = data;
+    const { name, last_name, email, password, score, role } = data;
+
+    Object.keys(data).forEach(key => {
+      if (!data[key]) delete data[key];
+    });
 
     delete data.score;
     delete data.role;
