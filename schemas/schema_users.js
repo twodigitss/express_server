@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
   }
 );
 
+//TODO: de verdad necesito esto? se parchear, pero no se si esto ahorre memoria
 const scoreSchema = new mongoose.Schema({
   email:      { type: String, required: true, ref: 'user_model', },
   score:      { type: Number, required: true, default: 300 },

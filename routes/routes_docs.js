@@ -1,8 +1,10 @@
-import Post from '../schemas/schema_posts.js';
 import { Router } from 'express';
 import { ObjectId } from 'mongodb';
 const router = Router();
 
+//schemas
+import Post from '../schemas/schema_posts.js';
+import json_struct from '../schemas/returnStruct.js';
 
 router.post('/docs/insert', async (req, res) => {
   console.log('Body:', req.body);
@@ -10,7 +12,10 @@ router.post('/docs/insert', async (req, res) => {
   try {
     await newPost.save()
     res.setHeader('Content-Type', 'application/json');
-    return res.status(200).json({ success: true, message: 'Data saved successfully' });
+    return res.send(json_struct({
+      message: 'Data saved successfully',
+    }));
+
   } catch (error) {
     return res.status(500).send(`[ins.coll] Something wrong at:  ${error}`);
   }
@@ -22,7 +27,9 @@ router.get('/docs/all', async (_req, res)=>{
   try {
     const coll = await Post.find({})
     res.setHeader('Content-Type', 'application/json');
-    return res.status(200).send(coll);
+    return res.send(json_struct({
+      data: coll,
+    }));
   } catch (error) {
     return res.status(500).send(`[fetch.coll] Something wrong at:  ${error}`);
   }
@@ -35,7 +42,9 @@ router.delete('/docs/delete', async (req, res)=>{
   try {
     await Post.deleteOne({ _id: objectId})
     res.setHeader('Content-Type', 'application/json');
-    return res.status(200).json({ success: true, message: 'Data deleted successfully' });
+    return res.send(json_struct({
+      message: 'Data deleted successfully',
+    }));
   } catch (error) {
     return res.status(500).send(`[del.coll] Something wrong at:  ${error}`);
   }

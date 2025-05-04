@@ -3,7 +3,7 @@ const router = Router();
 
 //schemas
 import User, { Score } from '../schemas/schema_users.js';
-
+import json_struct from '../schemas/returnStruct.js';
 
 router.get('/user/all', async(_req, res) => {
   try {
@@ -24,7 +24,9 @@ router.get('/user/all', async(_req, res) => {
     }
 
     res.setHeader('Content-Type', 'application/json');
-    return res.status(200).send(users_plain);
+    return res.send(json_struct({
+      data: users_plain
+    }));
   } catch (error) {
     return res.status(500).send(`[find_users] Something wrong at:  ${error}`);
   }
@@ -55,7 +57,7 @@ router.post('/user/login', async (req, res) => {
     console.log('User:', user);
     
     res.setHeader('Content-Type', 'application/json');
-    return res.status(200).send(user);
+    return res.send(json_struct({message: "Logged in!", data: user}));
 
   } catch (error) {
     return res.status(500).send(`[login] Something wrong at:  ${error}`);
@@ -87,7 +89,10 @@ router.post('/user/new', async (req, res) => {
     Promise.all([user.save(), user_scores.save()])
 
     res.setHeader('Content-Type', 'application/json');
-    return res.send('Registration done! Thanks for registering.' );
+    return res.send(json_struct({
+      message: "Registered!"
+    }));
+
   } catch (error) {
     return res.status(500).send(`[register] Something wrong at:  ${error}`);
   }
@@ -113,7 +118,7 @@ router.post('/user/find', async (req, res) => {
     user.role = scores.role;
 
     res.setHeader('Content-Type', 'application/json');
-    return res.status(200).send(user);
+    return res.send(json_struct({data: user, message: "Found!"}));
   } catch (error) {
     return res.status(500).send(`[f_s_u] Something wrong at:  ${error}`);
   }
@@ -130,7 +135,10 @@ router.delete('/user/delete', async (req, res)=>{
 
     res.setHeader('Content-Type', 'application/json');
     const answer = usr.acknowledged;
-    return res.status(200).send(answer);
+    return res.send(json_struct({
+      message: "Deleted!",
+      data: answer
+    }));
 
   } catch (error) {
     return res.status(500).send(`[del.coll] Something wrong at:  ${error}`);
@@ -141,14 +149,14 @@ router.delete('/user/delete', async (req, res)=>{
 router.patch('/user/modify', async (req, res) => {
   try {
     const { query, data } = req.body;
-    const { name, last_name, email, password, score, role } = data;
+    const { score, role } = data;
+
+    delete data.score;
+    delete data.role;
 
     Object.keys(data).forEach(key => {
       if (!data[key]) delete data[key];
     });
-
-    delete data.score;
-    delete data.role;
 
     const scores = await Score.updateOne(
       {email: query}, {$set: {score: score, role: role}}
@@ -160,7 +168,10 @@ router.patch('/user/modify', async (req, res) => {
     Promise.all([scores, user])
 
     const answer = user.acknowledged;
-    return res.status(200).send(answer);
+    return res.send(json_struct({
+      message: "Modified!",
+      data: answer
+    }));
     
   } catch (error) {
     return res.status(500).send(`[modify] Something wrong at:  ${error}`);
