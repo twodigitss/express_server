@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cors());
 
 app.listen(port, () => {
-   console.log(`🍀 Listening at: [ http://localhost:${port} ]`);
+   console.log(`> 🔭 Listening at: [ http://localhost:${port} ] `);
 });
 
 await MongooseSession(database).catch(console.dir);
