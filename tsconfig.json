@@ -9,9 +9,12 @@
     "allowJs": true,
     "baseUrl": "./",
     "paths": {
-      "@connections": ["./connections"],
-      "@routes": ["./routes"],
-      "@schemas": ["./schemas/*"]
+      "@src/*": ["./src/*"],
+      "@connections/*": ["./src/connections/*"],
+      "@controllers/*": ["./src/controllers/*"],
+      "@routes/*": ["./src/routes/*"],
+      "@schemas/*": ["./src/schemas/*"],
+      "@utils/*": ["./src/utils/*"]
     },
 
     // Bundler mode

@@ -1,10 +1,10 @@
 //express as a way to express a server
 import express from 'express';
 import cors from 'cors';
-import MongooseSession from './connections/mongoose.js';
+import MongooseSession from '@connections/mongoose.js';
 
-import router_docs from './routes/routes_docs';
-import router_users from './routes/routes_users';
+import router_docs from '@routes/routes_docs';
+import router_users from '@routes/routes_users';
 
 const database = "PruebaReact"
 const port = 3000;
