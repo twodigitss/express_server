@@ -11,9 +11,7 @@
     "paths": {
       "@src/*": ["./src/*"],
       "@connections/*": ["./src/connections/*"],
-      "@controllers/*": ["./src/controllers/*"],
-      "@routes/*": ["./src/routes/*"],
-      "@schemas/*": ["./src/schemas/*"],
+      "@features/*": ["./src/features/*"],
       "@utils/*": ["./src/utils/*"]
     },
 

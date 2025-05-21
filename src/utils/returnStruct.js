@@ -1,7 +1,14 @@
-const json_struct = (
-  {success=true, status=200, message=null, data=null, errors={}}) => { 
+/**
+ * @param {boolean} success
+ * @param {number} status
+ * @param {string|null} message
+ * @param {any} data
+ * @param {{ code: number, details: any }=} errors
+ */
 
+const payload = ({success=true, status=200, message=null, data=null, errors={}}) => { 
   if (status != 200) success = false
+
   return {
     success, status, message, data, 
     errors: errors || {
@@ -11,4 +18,4 @@ const json_struct = (
   }
 }
 
-export default json_struct;
+export default payload;

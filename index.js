@@ -3,8 +3,9 @@ import express from 'express';
 import cors from 'cors';
 import MongooseSession from '@connections/mongoose.js';
 
-import router_docs from '@routes/routes_docs';
-import router_users from '@routes/routes_users';
+import router_docs from '@features/documents/routes.js';
+import router_users from '@features/user/routes.js';
+import router_notes from '@features/notes/routes.js';
 
 const database = "PruebaReact"
 const port = 3000;
@@ -19,5 +20,6 @@ app.listen(port, () => {
 
 await MongooseSession(database).catch(console.dir);
 
-app.use('/', router_users);
-app.use('/', router_docs);
+app.use('/user/', router_users);
+app.use('/docs/', router_docs);
+app.use('/notes/', router_notes);

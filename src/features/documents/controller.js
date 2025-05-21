@@ -1,18 +1,18 @@
 import { ObjectId } from 'mongodb';
-import Post from '@schemas/schema_posts.js';
-import json_struct from '@utils/returnStruct.js';
+import Post from './schema.js';
+import payload from '@utils/returnStruct.js';
 
-const document = {
+const DocumentController = {
   //USED FOR INSERTING GENERIC DOCUMENTS BASED ON SCHEMA
   async insert(req, res) {
     const document = new Post(req.body);
     try {
       await document.save()
-      return res.send(json_struct({
+      return res.send(payload({
         message: 'Data saved successfully',
       }));
     } catch (error) {
-      return res.status(500).send(`[doc_controller] Error at:  ${error}`);
+      return res.status(500).send(`[docs/insert] Error at:  ${error}`);
     }
   },
 
@@ -20,11 +20,11 @@ const document = {
   async all(req, res) {
     try {
       const documents = await Post.find({})
-      return res.send(json_struct({
+      return res.send(payload({
         data: documents,
       }));
     } catch (error) {
-      return res.status(500).send(`[fetch.coll] Something wrong at:  ${error}`);
+      return res.status(500).send(`[docs/all] Something wrong at:  ${error}`);
     }
   },
 
@@ -33,13 +33,13 @@ const document = {
     const objectId = new ObjectId(req.params.id);
     try {
       await Post.deleteOne({ _id: objectId})
-      return res.send(json_struct({
+      return res.send(payload({
         message: 'Data deleted successfully',
       }));
     } catch (error) {
-      return res.status(500).send(`[doc_controller] Delete method failed because:  ${error}`);
+      return res.status(500).send(`[docs/delete] Delete method failed because:  ${error}`);
     }
   }
 }
 
-export default document;
+export default DocumentController;

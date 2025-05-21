@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb';
-import User from '@schemas/schema_users.js';
-import json_struct from '@utils/returnStruct.js';
+import User from './schema.js';
+import payload from '@utils/returnStruct.js';
 
-const user = {
+const UserController = {
   async all(req, res) {
     try {
       const users_found = await User.find({})
@@ -13,11 +13,12 @@ const user = {
         delete users_obj[i].password
       }
 
-      return res.send(json_struct({
+      return res.send(payload({
         data: users_obj
       }));
+
     } catch (error) {
-      return res.status(500).send(`[usr_all] Something wrong at:  ${error}`);
+      return res.status(500).send(`[user/all] Server error:  ${error}`);
     }
   },
 
@@ -27,12 +28,22 @@ const user = {
       const found = await User.findOne({'email': email})
 
       if (!found || found.email !== email){
-        //FIX: add the json_struct here and make a more complex response
-        return res.status(401).send("User not found");
+        return res.status(401).send(payload({
+          success: false, status: 401,
+          message: 'User not found',
+          data: null
+        }));
       }
 
       const isMatch = await Bun.password.verify(password, found.password);
-      if (!isMatch) return res.status(401).send("Passwords does not match");
+
+      if (!isMatch) {
+        return res.status(401).send(payload({
+          success: false, status: 401,
+          message: 'Passwords does not match',
+          data: null
+        }));
+      }
 
       //to make the thing modifiable
       const user = { ...found.toObject() };
@@ -40,12 +51,12 @@ const user = {
 
       console.log('Active Session for:', user.email);
 
-      return res.send(json_struct({
+      return res.send(payload({
         message: "Logged in!", data: user
       }));
 
     } catch (error) {
-      return res.status(500).send(`[usr_login] Something wrong at:  ${error}`);
+      return res.status(500).send(`[user/login] Server error:  ${error}`);
     }
 
   },
@@ -56,15 +67,15 @@ const user = {
       const new_user = req.body;
       const { email, password } = new_user;
 
-      Object.keys(new_user).forEach(key => {
-        if (!new_user[key]) delete new_user[key];
-      });
-
       //checking non-existent users
       const found = await User.findOne({'email': email})
+
       if (found && found.email == email){
-        //FIX: add the json_struct here
-        return res.status(403).send('Email already taken, please use another one');
+        return res.status(403).send(payload({
+          success: false, status: 500,
+          message: 'Email already taken, please use another one',
+          data: null
+        }));
       }
 
       //hashed password comes generated
@@ -75,13 +86,13 @@ const user = {
       const user = new User(new_user);
       await user.save()
 
-      return res.send(json_struct({
+      return res.send(payload({
         message: "Registered!",
         data: email
       }));
 
     } catch (error) {
-      return res.status(500).send(`[usr_new] Something wrong at:  ${error}`);
+      return res.status(500).send(`[user/register] Server error:  ${error}`);
     }
   },
 
@@ -91,19 +102,22 @@ const user = {
       const found = await User.findOne({ _id: objectId })
 
       if (!found){
-        //FIX: add the json_struct here
-        return res.status(500).send('Non existent user, is this the correct id?');
+        return res.status(500).send(payload({
+          success: false, status: 500,
+          message: 'Non existent user, is this the correct id?',
+          data: null
+        }));
       }
 
       const user = { ...found.toObject() };
       delete user.password;
 
-      return res.send(json_struct({
+      return res.send(payload({
         message: "Found!", data: user, 
       }));
 
     } catch (error) {
-      return res.status(500).send(`[usr_find] Something wrong at:  ${error}`);
+      return res.status(500).send(`[user/find] Server error:  ${error}`);
     }
 
   },
@@ -111,22 +125,23 @@ const user = {
   async delete(req, res){
     try {
       const objectId = new ObjectId(req.params.id);
+      //FIX: must be a use case where it does not find the id, but, wouldnt be that odd?
       const found = await User.findOneAndDelete({ _id: objectId })
 
-      return res.send(json_struct({
+      return res.send(payload({
         message: "Deleted!",
         data: found
       }));
 
     } catch (error) {
-      return res.status(500).send(`[usr_del] Something wrong at:  ${error}`);
+      return res.status(500).send(`[user/delete] Server error:  ${error}`);
     }
   },
 
   async modify(req, res){
     try {
       const objectId = new ObjectId(req.params.id);
-      const { data } = req.body;
+      const data = req.body;
 
       Object.keys(data).forEach(key => {
         if (!data[key]) delete data[key];
@@ -137,17 +152,17 @@ const user = {
       )
 
       const answer = user.acknowledged;
-      return res.send(json_struct({
+      return res.send(payload({
         message: "Modified!",
         data: answer
       }));
 
     } catch (error) {
-      return res.status(500).send(`[usr_mod] Something wrong at:  ${error}`);
+      return res.status(500).send(`[user/modify] Server error:  ${error}`);
     }
 
   }
 
 }
 
-export default user;
+export default UserController;
