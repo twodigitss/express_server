@@ -1,0 +1,15 @@
+### Get all users
+GET http://localhost:3000/docs/all
+Accept: application/json
+
+### Create a new post
+POST http://localhost:3000/docs/new
+Content-Type: application/json
+X-Custom-Header: MyValue
+
+{ "title": "A Man Rose From The Dead",
+  "description": "Album by scrim (nostalgic)"
+}
+
+### Delete a post
+DELETE http://localhost:3000/docs/delete/6868593a55970d469f63560d
